@@ -1,14 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import { updateTaskInList } from "../slices/tasksSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const MyVerticallyCenteredModal = (props) => {
+  const { selectedTask } = useSelector((state) => state.tasks);
   const [title, updateTitle] = useState("");
-  const [description, updateDescription] = useState("");
+  const [description, updateDescription] = useState(
+    selectedTask.description || ""
+  );
+  const [id, setId] = useState(0);
+  const dispatch = useDispatch();
   const updateTask = () => {
     props.onHide();
+    dispatch(
+      updateTaskInList({
+        id,
+        title,
+        description,
+      })
+    );
   };
+  useEffect(() => {
+    if (Object.keys(selectedTask).length !== 0) {
+      updateTitle(selectedTask.title);
+      updateDescription(selectedTask.description);
+      setId(selectedTask.id);
+    }
+  }, [selectedTask]);
   return (
     <div>
       <Modal
@@ -28,6 +49,7 @@ const MyVerticallyCenteredModal = (props) => {
               <Form.Label>Task Title</Form.Label>
               <Form.Control
                 type="text"
+                value={title}
                 placeholder="Enter Task Title"
                 onChange={(e) => updateTitle(e.target.value)}
               />
@@ -37,6 +59,7 @@ const MyVerticallyCenteredModal = (props) => {
               <Form.Label>Task Description</Form.Label>
               <Form.Control
                 type="text"
+                vlaue={description}
                 placeholder="Enter Task Description"
                 onChange={(e) => updateDescription(e.target.value)}
               />

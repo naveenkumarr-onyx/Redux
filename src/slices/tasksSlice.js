@@ -1,8 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
   tasksList: [],
   selectedTask: {},
+  isLoading: false,
+  error: "",
 };
+export const getTasksFromServer = createAsyncThunk(
+  "tasks/getTasksFromServer",
+  async (_, { rejectWithValue }) => {
+    const response = await fetch("http://localhost:8000/tasks");
+    if (response.ok) {
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    } else {
+      return rejectWithValue({ error: "No tasks Found" });
+    }
+  }
+);
 const tasksSlice = createSlice({
   name: "tasksSlice",
   initialState,
@@ -22,11 +36,30 @@ const tasksSlice = createSlice({
         task.id === action.payload.id ? action.payload : task
       );
     },
-    setSelectedTask: (state, actions) => [
-      (state.selectedTask = actions.payload),
-    ],
+    setSelectedTask: (state, actions) => {
+      state.selectedTask = actions.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getTasksFromServer.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getTasksFromServer.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = "";
+      state.tasksList = action.payload;
+    });
+    builder.addCase(getTasksFromServer.rejected, (state, action) => {
+      state.error = action.payload.error;
+      state.isLoading = false;
+      state.tasksList = [];
+    });
   },
 });
-export const { addTaskToList, removeTaskFromList, updateTaskInList } =
-  tasksSlice.actions;
+export const {
+  addTaskToList,
+  removeTaskFromList,
+  updateTaskInList,
+  setSelectedTask,
+} = tasksSlice.actions;
 export default tasksSlice.reducer;
