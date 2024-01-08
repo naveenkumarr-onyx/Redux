@@ -5,6 +5,7 @@ const initialState = {
   isLoading: false,
   error: "",
 };
+const BASE_URL = "http://localhost:8000/tasks";
 export const getTasksFromServer = createAsyncThunk(
   "tasks/getTasksFromServer",
   async (_, { rejectWithValue }) => {
@@ -14,6 +15,25 @@ export const getTasksFromServer = createAsyncThunk(
       return jsonResponse;
     } else {
       return rejectWithValue({ error: "No tasks Found" });
+    }
+  }
+);
+export const addTaskToServer = createAsyncThunk(
+  "tasks/addTaskToServer",
+  async (task, { rejectWithValue }) => {
+    const options = {
+      method: "POST",
+      body: JSON.stringify(task),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    };
+    const response = await fetch(BASE_URL, options);
+    if (response.ok) {
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    } else {
+      return rejectWithValue({ error: "Task Not Added" });
     }
   }
 );
