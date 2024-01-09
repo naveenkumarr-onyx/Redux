@@ -5,7 +5,7 @@ const initialState = {
   isLoading: false,
   error: "",
 };
-const BASE_URL = "https://thunderous-puppy-767a70.netlify.app/"
+const BASE_URL = "http://localhost:4000/api/tasks"
 // get
 export const getTasksFromServer = createAsyncThunk(
   "tasks/getTasksFromServer",
