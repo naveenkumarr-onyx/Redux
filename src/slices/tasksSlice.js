@@ -5,7 +5,7 @@ const initialState = {
   isLoading: false,
   error: "",
 };
-const BASE_URL = "http://localhost:4000/api/tasks"
+const BASE_URL = "http://localhost:4000/api/tasks";
 // get
 export const getTasksFromServer = createAsyncThunk(
   "tasks/getTasksFromServer",
@@ -23,14 +23,14 @@ export const getTasksFromServer = createAsyncThunk(
 export const addTasksToServer = createAsyncThunk(
   "tasks/addTasksToServer",
   async (task, { rejectWithValue }) => {
-    const options={
-      method:"POST",
-      body:JSON.stringify(task),
-      headers:{
-        "Content-type":"application/json; charset=UTF-8"
-      }
-    }
-    const response = await fetch(BASE_URL,options);
+    const options = {
+      method: "POST",
+      body: JSON.stringify(task),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    };
+    const response = await fetch(BASE_URL, options);
     if (response.ok) {
       const jsonResponse = await response.json();
       return jsonResponse;
@@ -43,14 +43,14 @@ export const addTasksToServer = createAsyncThunk(
 export const updateTasksToServer = createAsyncThunk(
   "tasks/updateTasksToServer",
   async (task, { rejectWithValue }) => {
-    const options={
-      method:"PATCH",
-      body:JSON.stringify(task),
-      headers:{
-        "Content-type":"application/json; charset=UTF-8"
-      }
-    }
-    const response = await fetch(BASE_URL+"/"+task.id,options);
+    const options = {
+      method: "PATCH",
+      body: JSON.stringify(task),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    };
+    const response = await fetch(BASE_URL + "/" + task.id, options);
     if (response.ok) {
       const jsonResponse = await response.json();
       return jsonResponse;
@@ -63,10 +63,10 @@ export const updateTasksToServer = createAsyncThunk(
 export const deleteTasksToServer = createAsyncThunk(
   "tasks/deleteTasksToServer",
   async (task, { rejectWithValue }) => {
-    const options={
-      method:"DELETE"
-    }
-    const response = await fetch(BASE_URL+"/"+task.id,options);
+    const options = {
+      method: "DELETE",
+    };
+    const response = await fetch(BASE_URL + "/" + task._id, options);
     if (response.ok) {
       const jsonResponse = await response.json();
       return jsonResponse;
@@ -86,7 +86,7 @@ const tasksSlice = createSlice({
     },
     removeTaskFromList: (state, action) => {
       state.tasksList = state.tasksList.filter(
-        (task) => task.id !== action.payload.id
+        (task) => task._id !== action.payload._id
       );
     },
     updateTaskInList: (state, action) => {
@@ -97,59 +97,61 @@ const tasksSlice = createSlice({
     setSelectedTask: (state, actions) => {
       state.selectedTask = actions.payload;
     },
-  },extraReducers:(builder) => {
+  },
+  extraReducers: (builder) => {
     builder
-        .addCase(getTasksFromServer.pending,(state) => {
-            state.isLoading = true
-        })
-        .addCase(getTasksFromServer.fulfilled,(state,action) => {
-            state.isLoading = false
-            state.error = ''
-            state.tasksList = action.payload
-        })
-        .addCase(getTasksFromServer.rejected,(state,action) => {
-            state.error = action.payload.error
-            state.isLoading = false
-            state.tasksList = []
-        })
-        .addCase(addTasksToServer.pending,(state) => {
-            state.isLoading = true
-        })
-        .addCase(addTasksToServer.fulfilled,(state,action) => {
-            state.isLoading = false
-            state.error = ''
-            state.tasksList.push(action.payload)
-        })
-        .addCase(addTasksToServer.rejected,(state,action) => {
-            state.error = action.payload.error
-            state.isLoading = false
-        })
-        .addCase(updateTasksToServer.pending,(state) => {
-            state.isLoading = true
-        })
-        .addCase(updateTasksToServer.fulfilled,(state,action) => {
-            state.isLoading = false
-            state.error = ''
-            state.tasksList = state.tasksList.map((task) => task._id === action.payload._id ? action.payload : task )
-        })
-        .addCase(updateTasksToServer.rejected,(state,action) => {
-            state.error = action.payload.error
-            state.isLoading = false
-        })
-        .addCase(deleteTasksToServer.pending,(state) => {
-            state.isLoading = true
-        })
-        .addCase(deleteTasksToServer.fulfilled,(state,action) => {
-            state.isLoading = false
-            state.error = ''
-        })
-        .addCase(deleteTasksToServer.rejected,(state,action) => {
-            state.error = action.payload.error
-            state.isLoading = false
-        })
-}
-
-})
+      .addCase(getTasksFromServer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getTasksFromServer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+        state.tasksList = action.payload;
+      })
+      .addCase(getTasksFromServer.rejected, (state, action) => {
+        state.error = action.payload.error;
+        state.isLoading = false;
+        state.tasksList = [];
+      })
+      .addCase(addTasksToServer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addTasksToServer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+        state.tasksList.push(action.payload);
+      })
+      .addCase(addTasksToServer.rejected, (state, action) => {
+        state.error = action.payload.error;
+        state.isLoading = false;
+      })
+      .addCase(updateTasksToServer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTasksToServer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+        state.tasksList = state.tasksList.map((task) =>
+          task._id === action.payload._id ? action.payload : task
+        );
+      })
+      .addCase(updateTasksToServer.rejected, (state, action) => {
+        state.error = action.payload.error;
+        state.isLoading = false;
+      })
+      .addCase(deleteTasksToServer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTasksToServer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+      })
+      .addCase(deleteTasksToServer.rejected, (state, action) => {
+        state.error = action.payload.error;
+        state.isLoading = false;
+      });
+  },
+});
 export const {
   addTaskToList,
   removeTaskFromList,

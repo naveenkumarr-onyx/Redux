@@ -8,9 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 const MyVerticallyCenteredModal = (props) => {
   const { selectedTask } = useSelector((state) => state.tasks);
   const [title, updateTitle] = useState("");
-  const [description, updateDescription] = useState(
-    selectedTask.description || ""
-  );
+  const [description, updateDescription] = useState("");
   const [id, setId] = useState(0);
   const dispatch = useDispatch();
   const updateTask = () => {

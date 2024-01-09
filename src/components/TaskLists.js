@@ -5,8 +5,12 @@ import * as Icon from "react-bootstrap-icons";
 import MyVerticallyCenteredModal from "./UpdateTask";
 import { useSelector, useDispatch } from "react-redux";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-
-import { setSelectedTask, removeTaskFromList,getTasksFromServer,deleteTasksToServer } from "../slices/tasksSlice";
+import {
+  setSelectedTask,
+  removeTaskFromList,
+  getTasksFromServer,
+  deleteTasksToServer,
+} from "../slices/tasksSlice";
 const TaskLists = () => {
   const [modalShow, setModalShow] = useState(false);
   const dispatch = useDispatch();
@@ -16,16 +20,17 @@ const TaskLists = () => {
   };
   useEffect(() => {
     dispatch(getTasksFromServer());
-  },[dispatch]);
+  }, [dispatch]);
   const deleteTask = (task) => {
-    if (!window.confirm("Are you sure to delete these task?")) return;
-dispatch(deleteTasksToServer(task))
-.unwrap()
-.then(()=>{
-  dispatch(removeTaskFromList(task));
-})
-    
-    console.log("deleted");
+    console.log("delete task");
+    if (!window.confirm("Are you sure you want to delete")) {
+      return;
+    }
+    dispatch(deleteTasksToServer(task))
+      .unwrap()
+      .then(() => {
+        dispatch(removeTaskFromList(task));
+      });
   };
   const { tasksList } = useSelector((state) => state.tasks);
   return (
@@ -50,7 +55,7 @@ dispatch(deleteTasksToServer(task))
           {tasksList &&
             tasksList.map((task, index) => {
               return (
-                <tr key={task.id}>
+                <tr key={task._id}>
                   <td>{index + 1}</td>
                   <td>{task.title}</td>
                   <td>{task.description}</td>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useDispatch } from "react-redux";
-import {addTasksToServer } from "../slices/tasksSlice";
+import { addTasksToServer } from "../slices/tasksSlice";
 const AddTask = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -13,7 +13,7 @@ const AddTask = () => {
       title,
       description,
     });
-    if (!title) {
+    if (!title || !description) {
       alert("please enter ur task ");
       return;
     }
