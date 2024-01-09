@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { updateTaskInList } from "../slices/tasksSlice";
+import { updateTasksToServer } from "../slices/tasksSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const MyVerticallyCenteredModal = (props) => {
@@ -16,7 +16,7 @@ const MyVerticallyCenteredModal = (props) => {
   const updateTask = () => {
     props.onHide();
     dispatch(
-      updateTaskInList({
+      updateTasksToServer({
         id,
         title,
         description,

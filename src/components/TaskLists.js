@@ -5,8 +5,8 @@ import * as Icon from "react-bootstrap-icons";
 import MyVerticallyCenteredModal from "./UpdateTask";
 import { useSelector, useDispatch } from "react-redux";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import { setSelectedTask, removeTaskFromList } from "../slices/tasksSlice";
-import { getTasksFromServer } from "../slices/tasksSlice";
+
+import { setSelectedTask, removeTaskFromList,getTasksFromServer,deleteTasksToServer } from "../slices/tasksSlice";
 const TaskLists = () => {
   const [modalShow, setModalShow] = useState(false);
   const dispatch = useDispatch();
@@ -16,11 +16,15 @@ const TaskLists = () => {
   };
   useEffect(() => {
     dispatch(getTasksFromServer());
-  });
+  },[dispatch]);
   const deleteTask = (task) => {
     if (!window.confirm("Are you sure to delete these task?")) return;
-
-    dispatch(removeTaskFromList(task));
+dispatch(deleteTasksToServer(task))
+.unwrap()
+.then(()=>{
+  dispatch(removeTaskFromList(task));
+})
+    
     console.log("deleted");
   };
   const { tasksList } = useSelector((state) => state.tasks);
